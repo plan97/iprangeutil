@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestExpandIPv4Range(t *testing.T) {
+func TestExpandIPv4(t *testing.T) {
 	printIPv4 := func(ip0, ip1, ip2, ip3 *uint8) (err error) {
 		t.Logf("%d.%d.%d.%d\n", *ip0, *ip1, *ip2, *ip3)
 		return

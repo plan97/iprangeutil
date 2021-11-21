@@ -15,13 +15,20 @@ var (
 // IPv4Func type allows the IP v4 address to be used in a function.
 type IPv4Func func(ip0, ip1, ip2, ip3 *uint8) error
 
-func nextIPv4(ip0, ip1, ip2, ip3,
-	endIP0, endIP1, endIP2, endIP3 *uint8) bool {
-	if (*ip0 == *endIP0) && (*ip1 == *endIP1) &&
-		(*ip2 == *endIP2) && (*ip3 == *endIP3) {
+// CompareIPv4 returns true if both the input IP v4 addresses are the same.
+func CompareIPv4(ip0, ip1, ip2, ip3,
+	compareIP0, compareIP1, compareIP2, compareIP3 *uint8) bool {
+	if (*ip0 == *compareIP0) && (*ip1 == *compareIP1) &&
+		(*ip2 == *compareIP2) && (*ip3 == *compareIP3) {
 		return true
 	}
+	return false
+}
 
+// NextIPv4 increments the input IP v4 address by 1.
+// If the input IP v4 address is 255.255.255.255,
+// then it would increment it to 0.0.0.0.
+func NextIPv4(ip0, ip1, ip2, ip3 *uint8) {
 	*ip3 += 1
 
 	if *ip3 == 0 {
@@ -35,8 +42,6 @@ func nextIPv4(ip0, ip1, ip2, ip3,
 			}
 		}
 	}
-
-	return false
 }
 
 // ExpandIPv4 would traverse all IP v4 addresses from start to end
@@ -65,10 +70,12 @@ func ExpandIPv4(start, end string, ipFunc IPv4Func) (err error) {
 			return fmt.Errorf("%s: %w", ErrIPFunc, err)
 		}
 
-		if nextIPv4(&startIP[0], &startIP[1], &startIP[2], &startIP[3],
+		if CompareIPv4(&startIP[0], &startIP[1], &startIP[2], &startIP[3],
 			&endIP[0], &endIP[1], &endIP[2], &endIP[3]) {
 			break
 		}
+
+		NextIPv4(&startIP[0], &startIP[1], &startIP[2], &startIP[3])
 	}
 
 	return
